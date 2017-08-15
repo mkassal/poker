@@ -41,7 +41,7 @@ class PlayerHand
 
   def initialize(cards)
     raise InsufficientCardsError if missing_cards?(cards)
-    @cards = cards
+    @cards = cards.map { |card| Card.new(card) }
     set_high_card
     set_counts
   end
@@ -95,39 +95,75 @@ class PlayerHand
     @high_card = CARD_RANKINGS[0] # initialize high card to lowest ordered card
 
     cards.each do |card|
-      if CARD_RANKINGS.index(card_face(card)) > CARD_RANKINGS.index(high_card)
-        @high_card = card_face(card)
+      if CARD_RANKINGS.index(card.face) > CARD_RANKINGS.index(high_card)
+        @high_card = card.face
       end
     end
   end
 
   def royal_flush?
-    return false
-  end
-
-  def straight_flush?
-    return false
-  end
-
-  def four_of_a_kind?
-    return false
-  end
-
-  def full_house?
-    return false
-  end
-
-  def flush?
-    return false
-  end
-
-  def straight?
-    cards.each
-
-    if
+    if sequential_ranking? && max_suit_match_count == 5 && high_card == "A"
       return true
     else
       return false
+    end
+  end
+
+  def straight_flush?
+    if sequential_ranking? && max_suit_match_count == 5
+      return true
+    else
+      return false
+    end
+  end
+
+  def four_of_a_kind?
+    if max_face_card_match[1] == 4
+      return true
+    else
+      return false
+    end
+  end
+
+  def full_house?
+    if face_count_values.include?(3) &&
+       face_count_values.include?(2)
+      return true
+    else
+      return false
+    end
+  end
+
+  def flush?
+    if max_suit_match_count == 5
+      return true
+    else
+      return false
+    end
+  end
+
+  def straight?
+    if sequential_ranking?
+      return true
+    else
+      return false
+    end
+  end
+
+  # Use each_cons to breakup sorted cards into tuples of length two
+  # and check sequential (http://ruby-doc.org/core-2.1.0/Enumerable.html#method-i-each_cons)
+  def sequential_ranking?
+    sorted_cards
+      .each_cons(2)
+      .all? do |a, b|
+        CARD_RANKINGS.index(b.face) == CARD_RANKINGS.index(a.face) + 1
+      end
+  end
+
+  # Since card faces are alphnumeric, sort using rank order instead
+  def sorted_cards
+    @sorted_cards ||= cards.sort_by do |card|
+      CARD_RANKINGS.index(card.face)
     end
   end
 
@@ -155,47 +191,60 @@ class PlayerHand
     end
   end
 
+  # assumes this method is checked last
+  def high_card?
+    return true
+  end
+
   def set_counts
     @face_counts = {}
     @suit_counts = {}
 
     cards.each do |card|
-      face = card[0]
-      suit = card[1]
-      if face_counts[face].nil?
-        @face_counts[face] = 1
+      if face_counts[card.face].nil?
+        @face_counts[card.face] = 1
       else
-        @face_counts[face] += 1
+        @face_counts[card.face] += 1
       end
 
-      if suit_counts[suit].nil?
-        @suit_counts[suit] = 1
+      if suit_counts[card.suit].nil?
+        @suit_counts[card.suit] = 1
       else
-        @suit_counts[suit] += 1
+        @suit_counts[card.suit] += 1
       end
     end
   end
 
   # returns one element array of [face_value, match_count]
   def max_face_card_match
-    @max_face_card_match ||= face_counts.max_by{|face_card,match_count| match_count}
+    @max_face_card_match ||= face_counts.max_by{ |face_card, match_count| match_count }
+  end
+
+  # returns max suit match count
+  def max_suit_match_count
+    @max_suit_match_count ||= suit_counts.max_by{ |suit_card, match_count| match_count }[1]
   end
 
   def face_pairs_count
-    face_counts.values.count(2)
+    face_count_values.count(2)
   end
 
-  # assumes this method is checked last
-  def high_card?
-    return true
+  def face_count_values
+    @face_count_values ||= face_counts.values
   end
 
-  def card_face(card)
-    card[0]
-  end
+  class Card
+    def initialize(card_str)
+      @card_str = card_str
+    end
 
-  def card_suit(card)
-    card[1]
+    def face
+      @card_str[0]
+    end
+
+    def suit
+      @card_str[1]
+    end
   end
 
   class InsufficientCardsError < StandardError; end

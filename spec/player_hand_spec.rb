@@ -81,7 +81,7 @@ describe PlayerHand do
     end
 
     context "with three of a kind as best hand" do
-      let(:input_line) { ["8C", "8H", "KC", "KH", "8S"] }
+      let(:input_line) { ["8C", "8H", "KC", "JH", "8S"] }
 
       it "returns :three_of_a_kind" do
         expect(player_hand.best_hand).to eq :three_of_a_kind
@@ -89,10 +89,50 @@ describe PlayerHand do
     end
 
     context "with straight as best hand" do
-      let(:input_line) { ["8C", "9H", "TC", "JH", "KS"] }
+      let(:input_line) { ["9C", "8H", "TC", "JH", "QS"] }
 
       it "returns :straight" do
         expect(player_hand.best_hand).to eq :straight
+      end
+    end
+
+    context "with flush as best hand" do
+      let(:input_line) { ["2C", "8C", "TC", "JC", "QC"] }
+
+      it "returns :flush" do
+        expect(player_hand.best_hand).to eq :flush
+      end
+    end
+
+    context "with full house as best hand" do
+      let(:input_line) { ["2S", "2H", "2C", "JC", "JH"] }
+
+      it "returns :full_house" do
+        expect(player_hand.best_hand).to eq :full_house
+      end
+    end
+
+    context "with four of a kind as best hand" do
+      let(:input_line) { ["2S", "2H", "2C", "2D", "JH"] }
+
+      it "returns :four_of_a_kind" do
+        expect(player_hand.best_hand).to eq :four_of_a_kind
+      end
+    end
+
+    context "with straight flush as best hand" do
+      let(:input_line) { ["2S", "3S", "4S", "5S", "6S"] }
+
+      it "returns :straight_flush" do
+        expect(player_hand.best_hand).to eq :straight_flush
+      end
+    end
+
+    context "with royal flush as best hand" do
+      let(:input_line) { ["AS", "JS", "QS", "KS", "TS"] }
+
+      it "returns :royal_flush" do
+        expect(player_hand.best_hand).to eq :royal_flush
       end
     end
 
