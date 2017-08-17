@@ -17,26 +17,11 @@ class PlayerHand
   ]
 
   FACE_CARDS_RANKED = [
-    "2",
-    "3",
-    "4",
-    "5",
-    "6",
-    "7",
-    "8",
-    "9",
-    "T",
-    "J",
-    "Q",
-    "K",
-    "A"
+    "2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"
   ]
 
   SUITS = [
-    "H",
-    "C",
-    "D",
-    "S"
+    "H", "C", "D", "S"
   ]
 
   def initialize(cards)
