@@ -1,19 +1,18 @@
 require_relative '../poker_game'
-require_relative '../poker_round'
 
 describe PokerGame do
   it "should raise an error if invalid file received for input" do
     expect {
       PokerGame.new("foo.txt").play_game
-    }.to raise_error(/No such file or directory @ rb_sysopen - foo.txt/)
+    }.to raise_error(/No such file or directory/)
   end
 
-  context "#play_hand" do
+  context "#play_game" do
     let(:input_line) { "bar" }
     let(:poker_round) { instance_double "PokerRound" }
 
     before do
-      allow(File).to receive(:readlines).with("foo.txt") { [input_line] }
+      allow(File).to receive(:readlines).with("foo.txt") {[ input_line ]}
       expect(PokerRound).to receive(:new).with(input_line) { poker_round }
     end
 
@@ -34,5 +33,4 @@ describe PokerGame do
       expect(pg.player_1_score).to eq 0
     end
   end
-
 end

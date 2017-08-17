@@ -1,33 +1,19 @@
-Poker
-================
+# Poker
 
-This app solves https://projecteuler.net/problem=54
+This app solves (https://projecteuler.net/problem=54)
 
-The app will read an input file poker.txt, containing 1K plays between two players.
+The app will read an input file [poker.txt](https://projecteuler.net/project/resources/p054_poker.txt), containing 1K plays between two players.
 
-https://projecteuler.net/project/resources/p054_poker.txt
+This program will determine the count of wins of player 1.
 
-The app will determine based off the input file which player wins, and keep count of the score, and determine the winning hand.
+== Requirements
+I have tested on ruby versions 2.0 and 2.4.1
 
-Ideas:
-- rules engine - input 2 hands and output winner, A or B
-- would be helpful to output individual plays to a file, and rank players
+== Run instructions
+To run, open irb, type in following:
 
-Models used:
+require './poker_game'
+PokerGame.new("poker.txt").play_game
 
-- PokerGame.new(file.txt)#play_game
-  - reads file line by line
-  - accumulates tallies of player wins
-  - displays output showing how many hands player 1 won.
-
-- PokerRound.new(player_a_hand, player_b_hand)#play_hand
-    -returns "a" or "b" as winner
-    -logs play to play_audit.txt
-
-- PlayerHand.new()
-  - cards[0..4]
-
-- Card
-  - suit  String
-  - value String
-
+Output should match following for sample poker text provided:
+=> Player 1 wins 376 hands

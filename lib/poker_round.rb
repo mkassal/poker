@@ -1,3 +1,5 @@
+require_relative "player_hand"
+
 class PokerRound
   attr_accessor :cards, :player_1_hand, :player_2_hand
 
@@ -10,16 +12,14 @@ class PokerRound
   def play_hand
     case player_1_hand <=> player_2_hand
 
-    # TODO: write to audit log also with extra info
-    when -1
+    when 1
       return "Player 1 wins"
     when 0
-      raise "Tie occurred - impossible?"
+      raise TiedHandError
     else
       return "Player 2 wins"
     end
   end
 
-  private
-
+  class TiedHandError < StandardError; end
 end

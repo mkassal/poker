@@ -1,4 +1,4 @@
-require_relative "poker_round"
+require_relative "lib/poker_round"
 
 class PokerGame
   attr_accessor :file_name, :player_1_score
@@ -10,7 +10,6 @@ class PokerGame
 
   def play_game
     File.readlines(file_name).each do |line|
-
       result = PokerRound.new(line).play_hand
 
       if result == "Player 1 wins"
