@@ -20,10 +20,6 @@ class PlayerHand
     "2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"
   ]
 
-  SUITS = [
-    "H", "C", "D", "S"
-  ]
-
   def initialize(cards)
     raise InsufficientCardsError if missing_cards?(cards)
     @cards = cards.map { |card| Card.new(card) }
