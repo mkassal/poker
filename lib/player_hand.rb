@@ -16,10 +16,6 @@ class PlayerHand
     :royal_flush
   ]
 
-  FACE_CARDS_RANKED = [
-    "2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"
-  ]
-
   def initialize(cards)
     raise InsufficientCardsError if missing_cards?(cards)
     @cards = cards.map { |card| Card.new(card) }
@@ -70,7 +66,7 @@ class PlayerHand
     end
 
     #convert cards to ranked number representations to allow integer comparison
-    @face_card_rankings_grouped.map! { |card| FACE_CARDS_RANKED.index(card) }
+    @face_card_rankings_grouped.map! { |card| Card::FACE_CARDS_RANKED.index(card) }
   end
 
 
@@ -160,14 +156,14 @@ class PlayerHand
       face_cards_ascending
         .each_cons(2)
         .all? do |a, b|
-          FACE_CARDS_RANKED.index(b) == FACE_CARDS_RANKED.index(a) + 1
+          Card::FACE_CARDS_RANKED.index(b) == Card::FACE_CARDS_RANKED.index(a) + 1
         end
   end
 
   # Since card faces are alphanumeric, sort using rank order instead
   def face_cards_ascending
     @face_cards_ascending ||= cards.sort_by do |card|
-      FACE_CARDS_RANKED.index(card.face)
+      Card::FACE_CARDS_RANKED.index(card.face)
     end.map(&:face)
   end
 
@@ -203,7 +199,7 @@ class PlayerHand
     @max_suit_count ||= suit_counts.max_by{ |suit_card, suit_count| suit_count }[1]
   end
 
-  #count number of pairs occuring in hand
+  # count number of pairs occuring in hand
   def face_pairs_count
     face_count_values.count(2)
   end
